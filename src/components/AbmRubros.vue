@@ -1,30 +1,27 @@
 <template>
     <div class="container">
-        <hr>
-        <h3>{{ abmAccion }} Rubros</h3>
-        <br>
-        <div class="form-group row">
-            <label for="ID" class="col-sm-2 col-form-label fw-bold">ID</label>
-            <div class="col-sm-10">
-                <input type="text" v-model="datos.id" disabled class="form-control">
-            </div>
-        </div>
-        <br>
-        <div class="form-group row">
-            <label for="Nombre" class="col-sm-2 col-form-label fw-bold">Nombre</label>
-            <div class="col-sm-10">
-                <input type="text" v-model="datos.nombre" :disabled="abmAccion == 'Consultar'" class="form-control">
+        <h2>{{ abmAccion }}</h2>
+        
+        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
+            <div class="form-floating">
+                <input @keyup.enter="aceptar()" v-model="datos.nombre" type="text" class="form-control" id="floatingNombre" placeholder="Nombre" ref="nombre">
+
+                <label for="floatingNombre">Nombre</label>
+
                 <div v-if="error && error.nombre" class="alert alert-danger">
                     {{ error.nombre[0] }}
                 </div>
             </div>
+        
+            <div class="d-flex flex-row justify-content-center align-items-center gap-2">
+                <button @click="aceptar()" class="btn btn-primary" title="Aceptar">
+                    <img src="../assets/ok.svg" alt="ok">
+                </button>
+                <button @click="cancelar()" class="btn btn-secondary" title="Cancelar">
+                    <img src="../assets/salir.svg" alt="salir">
+                </button>
+            </div>
         </div>
-        <br>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button @click="aceptar()" class="btn btn-primary me-md-2" :disabled="abmAccion == 'Consultar'">Aceptar</button>
-            <button @click="cancelar()" class="btn btn-secondary">Cancelar</button>
-        </div>
-        <hr>
     </div>
 </template>
 
@@ -40,22 +37,33 @@ export default {
             error: {},
         }
     },
+    mounted() {
+        this.$refs.nombre.focus();
+    },
     created() {
-        if(this.abmAccion != 'Ingresar') {
-            this.obtenerDatosId('rubros', this.abmId)
-            .then(res => {
-                this.datos = res
-            })
-        }
+        this.traerDatos();
     },
     methods: {
+        traerDatos() {
+            if(this.abmAccion != 'Ingresar') {
+                this.obtenerDatosId('rubros', this.abmId)
+                .then(res => {
+                    this.datos = res
+                })
+            }
+        },
         aceptar() {
             if(this.abmAccion == 'Ingresar') {
                 this.ingresarDatos('rubros', this.datos)
                 .then(res => {
                     if(res.validar == true) {
                         this.error = {}
-                        this.$alert("Rubro Ingresado");
+                        this.$fire({
+                            title: "Ingresado!",
+                            showConfirmButton: false,
+                            type: "success",
+                            timer: 1000
+                        });
                         this.$emit('salirAbmrubros', true)
                     }else {
                         this.error = res
@@ -67,7 +75,12 @@ export default {
                 this.editarDatos('rubros', this.abmId, this.datos)
                 .then(res => {
                     if(res.validar == true) {
-                        this.$alert("Rubro Editado");
+                        this.$fire({
+                            title: "Editado!",
+                            showConfirmButton: false,
+                            type: "success",
+                            timer: 1000
+                        });
                         this.$emit('salirAbmrubros', true)
                     }else {
                         this.error = res

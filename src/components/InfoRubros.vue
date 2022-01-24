@@ -6,14 +6,19 @@
             :abmId=infoId
             @salirAbmrubros=mostrarAbmrubros($event)
         />
+        
         <div v-if="verAbmrubros == false">
-            <hr>
-            <h1>Lista de Rubros</h1>
-            <button @click="abmRubros('Ingresar')" class="btn btn-success">Ingresar</button>
-            <hr>
-            <input type="search" placeholder="Filtrar por nombres" v-model="filtroNombres" class="form-control">
-            <br>
-            <table class="table table-hover">
+            <div class="d-flex flex-row justify-content-between align-items-center">
+                <h1>Rubros</h1>
+
+                <button @click="abmRubros('Ingresar')" class="btn btn-success" title="Ingresar">
+                    <img src="../assets/create.svg" alt="create">
+                </button>
+
+                <input v-model="filtroNombres" type="search" class="form-control w-25" placeholder="Buscar">
+            </div>
+        
+            <table class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -26,10 +31,13 @@
                         <th scope="row">{{ rubro.id }}</th>
                         <td>{{ rubro.nombre }}</td>
                         <td>
-                            <div class="d-grid gap-2 d-md-block">
-                                <button @click="abmRubros('Editar', rubro.id)" class="btn btn-warning me-md-2">Editar</button>
-                                <button @click="eliminar(rubro.id)" class="btn btn-danger me-md-2">Eliminar</button>
-                                <button @click="abmRubros('Consultar', rubro.id)" class="btn btn-info">Consultar</button>
+                            <div class="d-flex flex-row justify-content-center align-items-center gap-2">
+                                <button @click="abmRubros('Editar', rubro.id)" class="btn btn-warning" title="Editar">
+                                    <img src="../assets/update.svg" alt="update">
+                                </button>                 
+                                <button @click="eliminar(rubro.id)" class="btn btn-danger" title="Eliminar">
+                                    <img  src="../assets/delete.svg" alt="delete">
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -77,14 +85,26 @@ export default {
             }
         },
         eliminar(infoId) {
-            this.$confirm("Estas seguro?").then(() => {
-                this.eliminarDatos('rubros', infoId)
-                .then(res => {
-                    this.datos = res
+            this.$fire({
+                title: "Estas seguro?",
+                text: "No podras volver atras",
+                type: "warning",
+                showConfirmButton: true,
+                showCancelButton: true,
+                confirmButtonText: "Eliminar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.value) {
+                    this.eliminarDatos('rubros', infoId)
                     this.traerDatos()
-                    this.$alert("Rubro Eliminado");
-                })
-            }).catch(() => {});
+                    this.$fire({
+                        title: "Eliminado!",
+                        showConfirmButton: false,
+                        type: "success",
+                        timer: 1000
+                    });
+                }
+            });
         }
     },
     computed: {

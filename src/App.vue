@@ -1,11 +1,10 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Ventas y Compras</router-link> |
-      <router-link to="/articulos">Articulos</router-link> |
-      <router-link to="/rubros">Rubros</router-link> |
-      <router-link to="/comprobantes">Comprobantes</router-link> |
-      <router-link to="/inventario">Inventario</router-link>
+    <div id="nav" class="d-flex flex-row justify-content-center align-items-center gap-5">
+      <router-link to="/">Compras / Ventas</router-link>
+      <router-link to="/articulos">Articulos</router-link>
+      <router-link to="/rubros">Rubros</router-link>
+      <router-link to="/comprobantes">Comprobantes</router-link>
     </div>
     <router-view/>
   </div>
@@ -17,19 +16,24 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: black;
 }
 
 #nav {
-  padding: 30px;
+  padding: 2em;
 }
 
 #nav a {
   font-weight: bold;
-  color: #2c3e50;
+  color: black;
+  text-decoration: none;
+}
+
+#nav a:hover {
+  text-decoration: underline;
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  text-decoration: underline;
 }
 </style>

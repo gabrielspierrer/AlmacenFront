@@ -6,34 +6,44 @@
             :abmId=infoId
             @salirAbmarticulos=mostrarAbmarticulos($event)
         />
+
         <div v-if="verAbmarticulos == false">
-            <hr>
-            <h1>Lista de Articulos</h1>
-            <button @click="abmArticulos('Ingresar')" class="btn btn-success">Ingresar</button>
-            <hr>
-            <input type="search" placeholder="Filtrar por rubros" v-model="filtroRubros" class="form-control">
-            <br>
-            <table class="table table-hover">
+            <div class="d-flex flex-row justify-content-between align-items-center">
+                <h1>Articulos</h1>
+                
+                <button @click="abmArticulos('Ingresar')" class="btn btn-success" title="Ingresar">
+                    <img src="../assets/create.svg" alt="create">
+                </button>
+
+                <input v-model="filtroArticulos" type="search" class="form-control w-25" placeholder="Buscar">
+            </div>
+
+            <table class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Rubro</th>
+                        <th scope="col">Stock</th>
                         <th scope="col">Precio</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(articulo, index) in rubrosFiltrados" :key="index">
+                    <tr v-for="(articulo, index) in articulosFiltrados" :key="index">
                         <th scope="row">{{ articulo.id }}</th>
                         <td>{{ articulo.nombre }}</td>
                         <td>{{ articulo.rubro.nombre }}</td>
+                        <td>{{ articulo.stock }}</td>
                         <td>{{ articulo.precio }}</td>
                         <td>
-                            <div class="d-grid gap-2 d-md-block">
-                                <button @click="abmArticulos('Editar', articulo.id)" class="btn btn-warning me-md-2">Editar</button>
-                                <button @click="eliminar(articulo.id)" class="btn btn-danger me-md-2">Eliminar</button>
-                                <button @click="abmArticulos('Consultar', articulo.id)" class="btn btn-info">Consultar</button>
+                            <div class="d-flex flex-row justify-content-center align-items-center gap-2">
+                                <button @click="abmArticulos('Editar', articulo.id)" class="btn btn-warning" title="Editar">
+                                    <img src="../assets/update.svg" alt="update">
+                                </button>
+                                <button @click="eliminar(articulo.id)" class="btn btn-danger" title="Eliminar">
+                                    <img src="../assets/delete.svg" alt="delete">
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -56,7 +66,7 @@ export default {
             infoAccion: '',
             infoId: '',
             verAbmarticulos: false,
-            filtroRubros: '',
+            filtroArticulos: '',
         }
     },
     created() {
@@ -81,20 +91,32 @@ export default {
             }
         },
         eliminar(infoId) {
-            this.$confirm("Estas seguro?").then(() => {
-                this.eliminarDatos('articulos', infoId)
-                .then(res => {
-                    this.datos = res
+            this.$fire({
+                title: "Estas seguro?",
+                text: "No podras volver atras",
+                type: "warning",
+                showConfirmButton: true,
+                showCancelButton: true,
+                confirmButtonText: "Eliminar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.value) {
+                    this.eliminarDatos('articulos', infoId)
                     this.traerDatos()
-                    this.$alert("Articulo Eliminado");
-                })
-            }).catch(() => {});
+                    this.$fire({
+                        title: "Eliminado!",
+                        showConfirmButton: false,
+                        type: "success",
+                        timer: 1000
+                    });
+                }
+            });
         }
     },
     computed: {
-        rubrosFiltrados() {
+        articulosFiltrados() {
             return this.articulos.filter(articulo => {
-                return articulo.rubro.nombre.toLowerCase().includes(this.filtroRubros.toLowerCase())
+                return articulo.nombre.toLowerCase().includes(this.filtroArticulos.toLowerCase())
             })
         }
     }

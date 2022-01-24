@@ -6,34 +6,40 @@
             :abmId=infoId
             @salirAbmcomprobantes=mostrarAbmcomprobantes($event)
         />
+
         <div v-if="verAbmcomprobantes == false">
-            <hr>
-            <h1>Lista de Comprobantes</h1>
-            <hr>
-            <input type="search" placeholder="Filtrar por numeros" v-model="filtroNumeros" class="form-control">
-            <br>
-            <table class="table table-hover">
+            <div class="d-flex flex-row justify-content-between align-items-center">
+                <h1>Comprobantes</h1>
+                
+                <input v-model="filtroFechas" type="date" class="form-control w-25">
+            </div>
+            
+            <table class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Fecha</th>
-                        <th scope="col">Numero</th>
+                        <th scope="col">Hora</th>
                         <th scope="col">Tipo</th>
                         <th scope="col">Total</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(comprobante, index) in numerosFiltrados" :key="index">
+                    <tr v-for="(comprobante, index) in fechasFiltradas" :key="index">
                         <th scope="row">{{ comprobante.id }}</th>
                         <td>{{ comprobante.fecha }}</td>
-                        <td>{{ comprobante.numero }}</td>
+                        <td>{{ comprobante.hora }}</td>
                         <td>{{ comprobante.tipo }}</td>
                         <td>{{ comprobante.total }}</td>
                         <td>
-                            <div class="d-grid gap-2 d-md-block">
-                                <button @click="eliminar(comprobante.id)" class="btn btn-danger me-md-2">Eliminar</button>
-                                <button @click="abmComprobantes('Consultar', comprobante.id)" class="btn btn-info">Consultar</button>
+                            <div class="d-flex flex-row justify-content-center align-items-center gap-2">
+                                <button @click="eliminar(comprobante.id)" class="btn btn-danger" title="Eliminar">
+                                    <img src="../assets/delete.svg" alt="delete">
+                                </button>
+                                <button @click="abmComprobantes('Info', comprobante.id)" class="btn btn-info" title="Info">
+                                    <img src="../assets/info.svg" alt="info">
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -56,7 +62,7 @@ export default {
             infoAccion: '',
             infoId: '',
             verAbmcomprobantes: false,
-            filtroNumeros: '',
+            filtroFechas: '',
         }
     },
     created() {
@@ -81,20 +87,32 @@ export default {
             }
         },
         eliminar(infoId) {
-            this.$confirm("Estas seguro?").then(() => {
-                this.eliminarDatos('comprobantes', infoId)
-                .then(res => {
-                    this.datos = res
+            this.$fire({
+                title: "Estas seguro?",
+                text: "No podras volver atras",
+                type: "warning",
+                showConfirmButton: true,
+                showCancelButton: true,
+                confirmButtonText: "Eliminar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.value) {
+                    this.eliminarDatos('comprobantes', infoId)
                     this.traerDatos()
-                    this.$alert("Comprobante Eliminado");
-                })
-            }).catch(() => {});
+                    this.$fire({
+                        title: "Eliminado!",
+                        showConfirmButton: false,
+                        type: "success",
+                        timer: 1000
+                    });
+                }
+            });
         }
     },
     computed: {
-        numerosFiltrados() {
+        fechasFiltradas() {
             return this.comprobantes.filter(comprobante => {
-                return comprobante.numero.toLowerCase().includes(this.filtroNumeros.toLowerCase())
+                return comprobante.fecha.toLowerCase().includes(this.filtroFechas.toLowerCase())
             })
         }
     }

@@ -1,48 +1,35 @@
 <template>
     <div class="container">
-        <hr>
-        <h3>{{ abmAccion }} Comprobantes</h3>
-        <br>
-        <div class="form-group row">
-            <label for="ID" class="col-sm-2 col-form-label fw-bold">ID</label>
-            <div class="col-sm-10">
-                <input type="text" v-model="datos.id" disabled class="form-control">
+        <h2>{{ abmAccion }}</h2>
+
+        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
+            <div class="d-flex flex-row justify-content-center align-items-start gap-2">
+                <div class="form-floating">
+                    <input v-model="datos.fecha" type="text" class="form-control" id="floatingFecha" placeholder="Fecha" :disabled="abmAccion == 'Info'">
+
+                    <label for="floatingFecha">Fecha</label>
+                </div>
+
+                <div class="form-floating">
+                    <input v-model="datos.hora" type="text" class="form-control" id="floatingHora" placeholder="Hora" :disabled="abmAccion == 'Info'">
+
+                    <label for="floatingHora">Hora</label>
+                </div>
+
+                <div class="form-floating">
+                    <input v-model="datos.tipo" type="text" class="form-control" id="floatingTipo" placeholder="Tipo" :disabled="abmAccion == 'Info'">
+
+                    <label for="floatingTipo">Tipo</label>
+                </div>
+
+                <div class="form-floating">
+                    <input v-model="datos.total" type="text" class="form-control" id="floatingTotal" placeholder="Total" :disabled="abmAccion == 'Info'">
+
+                    <label for="floatingTotal">Total</label>
+                </div>
             </div>
-        </div>
-        <br>
-        <div class="form-group row">
-            <label for="Fecha" class="col-sm-2 col-form-label fw-bold">Fecha</label>
-            <div class="col-sm-10">
-                <input type="date" v-model="datos.fecha" :disabled="abmAccion == 'Consultar'" class="form-control">
-            </div>
-        </div>
-        <br>
-        <div class="form-group row">
-            <label for="Numero" class="col-sm-2 col-form-label fw-bold">Numero</label>
-            <div class="col-sm-10">
-                <input type="text" v-model="datos.numero" :disabled="abmAccion == 'Consultar'" class="form-control">
-            </div>
-        </div>
-        <br>
-        <div class="form-group row">
-            <label for="Tipo" class="col-sm-2 col-form-label fw-bold">Tipo</label>
-            <div class="col-sm-10">
-                <select v-model="datos.tipo" :disabled="abmAccion == 'Consultar'" class="form-select">
-                    <option>Venta</option>
-                    <option>Compra</option>
-                </select>
-            </div>
-        </div>
-        <br>
-        <div class="form-group row">
-            <label for="Total" class="col-sm-2 col-form-label fw-bold">Total</label>
-            <div class="col-sm-10">
-                <input type="text" v-model="datos.total" :disabled="abmAccion == 'Consultar'" class="form-control">
-            </div>
-        </div>
-        <br>
-        <div v-if="abmAccion == 'Consultar'">
-            <table class="table table-hover">
+
+            <table class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th scope="col">Articulo</th>
@@ -52,19 +39,17 @@
                 </thead>
                 <tbody>
                     <tr v-for="(detalle, index) in datos.comprobantedetalles" :key="index">
-                        <td>{{ detalle.articulo }}</td>
+                        <td>{{ detalle.articulo.nombre }}</td>
                         <td>{{ detalle.cantidad }}</td>
                         <td>{{ detalle.precio }}</td>
                     </tr>
                 </tbody>
             </table>
+
+            <button @click="aceptar()" class="btn btn-primary" title="Aceptar">
+                <img src="../assets/ok.svg" alt="ok">
+            </button>
         </div>
-        <br>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button @click="aceptar()" class="btn btn-primary me-md-2" :disabled="abmAccion == 'Consultar'">Aceptar</button>
-            <button @click="cancelar()" class="btn btn-secondary">Cancelar</button>
-        </div>
-        <hr>
     </div>
 </template>
 
@@ -80,28 +65,18 @@ export default {
         }
     },
     created() {
-        if(this.abmAccion != 'Ingresar') {
-            this.obtenerDatosId('comprobantes', this.abmId)
-            .then(res => {
-                this.datos = res
-            })
-        }
+        this.traerDatos();
     },
     methods: {
-        aceptar() {
-            if(this.abmAccion == 'Ingresar') {
-                this.ingresarDatos('comprobantes', this.datos)
+        traerDatos() {
+            if(this.abmAccion == 'Info') {
+                this.obtenerDatosId('comprobantes', this.abmId)
                 .then(res => {
-                    if(res.id != 0) {
-                        this.$alert("Comprobante Ingresado");
-                    }else {
-                        this.$alert("Comprobante No Ingresado");
-                    }
+                    this.datos = res
                 })
             }
-            this.$emit('salirAbmcomprobantes', true)
         },
-        cancelar() {
+        aceptar() {
             this.$emit('salirAbmcomprobantes', false)
         }
     }
