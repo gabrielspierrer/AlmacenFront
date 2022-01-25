@@ -1,8 +1,12 @@
 <template>
     <div class="container">
+        <!-- Titulo principal -->
         <h2>{{ abmAccion }}</h2>
         
+        <!-- Contenedor del formulario con los botones -->
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
+
+            <!-- Nombre -->
             <div class="form-floating">
                 <input @keyup.enter="aceptar()" v-model="datos.nombre" type="text" class="form-control" id="floatingNombre" placeholder="Nombre" ref="nombre">
 
@@ -12,7 +16,8 @@
                     {{ error.nombre[0] }}
                 </div>
             </div>
-        
+
+            <!-- Botones aceptar y cancelar -->
             <div class="d-flex flex-row justify-content-center align-items-center gap-2">
                 <button @click="aceptar()" class="btn btn-primary" title="Aceptar">
                     <img src="../assets/ok.svg" alt="ok">
@@ -38,6 +43,7 @@ export default {
         }
     },
     mounted() {
+        // Focus en el input nombre
         this.$refs.nombre.focus();
     },
     created() {
@@ -45,6 +51,7 @@ export default {
     },
     methods: {
         traerDatos() {
+            // Traer los datos del rubro si se edita
             if(this.abmAccion != 'Ingresar') {
                 this.obtenerDatosId('rubros', this.abmId)
                 .then(res => {
@@ -53,6 +60,7 @@ export default {
             }
         },
         aceptar() {
+            // Ingresar nuevo rubro a la base de datos y volver al componente principal
             if(this.abmAccion == 'Ingresar') {
                 this.ingresarDatos('rubros', this.datos)
                 .then(res => {
@@ -65,12 +73,14 @@ export default {
                             timer: 1000
                         });
                         this.$emit('salirAbmrubros', true)
+                    // Mostrar error y quedarse en el componente
                     }else {
                         this.error = res
                         this.$emit('mostrarAbmrubros')
                     }
                 })
             }
+            // Se actualiza el rubro especifico y luego se sale al componente principal
             if(this.abmAccion == 'Editar') {
                 this.editarDatos('rubros', this.abmId, this.datos)
                 .then(res => {
@@ -82,6 +92,7 @@ export default {
                             timer: 1000
                         });
                         this.$emit('salirAbmrubros', true)
+                    // Se muestra el error y se mantiene en el componente
                     }else {
                         this.error = res
                         this.$emit('mostrarAbmrubros')
@@ -90,6 +101,7 @@ export default {
             }
         },
         cancelar() {
+            // Volver al componente principal
             this.$emit('salirAbmrubros', false)
         }
     }

@@ -1,5 +1,7 @@
 <template>
     <div class="container">
+
+        <!-- Componente para ingresar o editar articulos -->
         <AbmArticulos
             v-if="verAbmarticulos == true"
             :abmAccion=infoAccion
@@ -7,7 +9,10 @@
             @salirAbmarticulos=mostrarAbmarticulos($event)
         />
 
+        <!-- Contenedor del componente de articulos -->
         <div v-if="verAbmarticulos == false">
+
+            <!-- Contenedor del titulo, boton ingresar y busqueda -->
             <div class="d-flex flex-row justify-content-between align-items-center">
                 <h1>Articulos</h1>
                 
@@ -18,6 +23,7 @@
                 <input v-model="filtroArticulos" type="search" class="form-control w-25" placeholder="Buscar">
             </div>
 
+            <!-- Tabla con todos los articulos -->
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -37,6 +43,7 @@
                         <td>{{ articulo.stock }}</td>
                         <td>{{ articulo.precio }}</td>
                         <td>
+                            <!-- Botones editar y eliminar -->
                             <div class="d-flex flex-row justify-content-center align-items-center gap-2">
                                 <button @click="abmArticulos('Editar', articulo.id)" class="btn btn-warning" title="Editar">
                                     <img src="../assets/update.svg" alt="update">
@@ -74,23 +81,27 @@ export default {
     },
     methods: {
         traerDatos() {
+            // Traer todos los articulos
             this.obtenerDatos('articulos')
             .then(res => {
                 this.articulos = res
             })
         },
         abmArticulos(accion, id) {
+            // Muestro abm de articulos y le paso la accion y el id
             this.infoAccion = accion
             this.infoId = id
             this.verAbmarticulos = !this.verAbmarticulos
         },
         mostrarAbmarticulos(ver) {
+            // Desde el abm emito para cerrarlo y le paso un valor falso o verdadero si quiero traer los datos
             this.verAbmarticulos = false
             if(ver) {
                 this.traerDatos()
             }
         },
         eliminar(infoId) {
+            // Verifico antes de eliminar un articulo de la base de datos
             this.$fire({
                 title: "Estas seguro?",
                 text: "No podras volver atras",
@@ -115,6 +126,7 @@ export default {
     },
     computed: {
         articulosFiltrados() {
+            // Buscar articulos por nombre
             return this.articulos.filter(articulo => {
                 return articulo.nombre.toLowerCase().includes(this.filtroArticulos.toLowerCase())
             })

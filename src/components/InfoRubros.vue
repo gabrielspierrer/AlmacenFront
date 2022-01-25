@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <!-- Componente del abm rubros -->
         <AbmRubros
             v-if="verAbmrubros == true"
             :abmAccion=infoAccion
@@ -7,7 +8,10 @@
             @salirAbmrubros=mostrarAbmrubros($event)
         />
         
+        <!-- Contenedor de los rubros -->
         <div v-if="verAbmrubros == false">
+
+            <!-- Titulo, boton ingresar y buscador de rubros -->
             <div class="d-flex flex-row justify-content-between align-items-center">
                 <h1>Rubros</h1>
 
@@ -17,7 +21,8 @@
 
                 <input v-model="filtroNombres" type="search" class="form-control w-25" placeholder="Buscar">
             </div>
-        
+
+            <!-- Tabla con todos los rubros -->
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -31,6 +36,7 @@
                         <th scope="row">{{ rubro.id }}</th>
                         <td>{{ rubro.nombre }}</td>
                         <td>
+                            <!-- Botones editar y eliminar -->
                             <div class="d-flex flex-row justify-content-center align-items-center gap-2">
                                 <button @click="abmRubros('Editar', rubro.id)" class="btn btn-warning" title="Editar">
                                     <img src="../assets/update.svg" alt="update">
@@ -68,23 +74,27 @@ export default {
     },
     methods: {
         traerDatos() {
+            // Traer todos los rubros
             this.obtenerDatos('rubros')
             .then(res => {
                 this.rubros = res
             })
         },
         abmRubros(accion, id) {
+            // Mostrar el abm de rubros pasando la accion y el id
             this.infoAccion = accion
             this.infoId = id
             this.verAbmrubros = !this.verAbmrubros
         },
         mostrarAbmrubros(ver) {
+            // Desde el abm emit hacia este compoenente pasando true o false para traer o no traer los datos 
             this.verAbmrubros = false
             if(ver) {
                 this.traerDatos()
             }
         },
         eliminar(infoId) {
+            // Verificar antes de eliminar un rubro
             this.$fire({
                 title: "Estas seguro?",
                 text: "No podras volver atras",
@@ -109,6 +119,7 @@ export default {
     },
     computed: {
         nombresFiltrados() {
+            // Buscar rubros por nombre
             return this.rubros.filter(rubro => {
                 return rubro.nombre.toLowerCase().includes(this.filtroNombres.toLowerCase())
             })

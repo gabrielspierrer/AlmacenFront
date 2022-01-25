@@ -1,27 +1,36 @@
 <template>
     <div class="container">
+        <!-- Titulo principal -->
         <h2>{{ abmAccion }}</h2>
-
+        
+        <!-- Contenedor de toda la informacion -->
         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
+
+            <!-- Contenedor de los datos del comprobante -->
             <div class="d-flex flex-row justify-content-center align-items-start gap-2">
+
+                <!-- Fecha -->
                 <div class="form-floating">
                     <input v-model="datos.fecha" type="text" class="form-control" id="floatingFecha" placeholder="Fecha" :disabled="abmAccion == 'Info'">
 
                     <label for="floatingFecha">Fecha</label>
                 </div>
 
+                <!-- Hora -->
                 <div class="form-floating">
                     <input v-model="datos.hora" type="text" class="form-control" id="floatingHora" placeholder="Hora" :disabled="abmAccion == 'Info'">
 
                     <label for="floatingHora">Hora</label>
                 </div>
 
+                <!-- Tipo -->
                 <div class="form-floating">
                     <input v-model="datos.tipo" type="text" class="form-control" id="floatingTipo" placeholder="Tipo" :disabled="abmAccion == 'Info'">
 
                     <label for="floatingTipo">Tipo</label>
                 </div>
 
+                <!-- Total -->
                 <div class="form-floating">
                     <input v-model="datos.total" type="text" class="form-control" id="floatingTotal" placeholder="Total" :disabled="abmAccion == 'Info'">
 
@@ -29,6 +38,7 @@
                 </div>
             </div>
 
+            <!-- Tabla con los detalles del comprobante -->
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -46,6 +56,7 @@
                 </tbody>
             </table>
 
+            <!-- Boton para regresar al componente principal -->
             <button @click="aceptar()" class="btn btn-primary" title="Aceptar">
                 <img src="../assets/ok.svg" alt="ok">
             </button>
@@ -69,6 +80,7 @@ export default {
     },
     methods: {
         traerDatos() {
+            // Se traen los datos del comprobante seleccionado
             if(this.abmAccion == 'Info') {
                 this.obtenerDatosId('comprobantes', this.abmId)
                 .then(res => {
@@ -77,6 +89,7 @@ export default {
             }
         },
         aceptar() {
+            // Volver al componente principal
             this.$emit('salirAbmcomprobantes', false)
         }
     }

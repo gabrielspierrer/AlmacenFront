@@ -1,8 +1,12 @@
 <template>
     <div class="container">
+        <!-- Titulo principal -->
         <h2>Venta</h2>
 
+        <!-- Contenedor de formulario y botones -->
         <div class="d-flex flex-row justify-content-center align-items-start gap-2">
+
+            <!-- Articulo -->
             <div class="form-floating">
                 <b-form-input v-model="datos.articulo_id" id="floatingArticulo" placeholder="Articulo" list="art-list" ref="articulo"></b-form-input>
                 <b-form-datalist id="art-list">
@@ -16,6 +20,7 @@
                 </div>
             </div>
 
+            <!-- Cantidad -->
             <div class="form-floating">
                 <input @keyup.enter="ingresarArticulo()" v-model="datos.cantidad" type="text" class="form-control" id="floatingCantidad" placeholder="Cantidad">
 
@@ -26,6 +31,7 @@
                 </div>
             </div>
 
+            <!-- Botones de opciones -->
             <button @click="ingresarArticulo()" class="btn btn-primary" title="Añadir articulo">
                 <img src="../assets/create.svg" alt="create">
             </button>
@@ -39,6 +45,7 @@
             </button>
         </div>
             
+        <!-- Tabla con los detalles de la venta -->
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
@@ -54,6 +61,7 @@
                     <td>{{ venta.cantidad }}</td>
                     <td>{{ venta.precio }}</td>
                     <td>
+                        <!-- Boton para eliminar un articulo -->
                         <button @click="eliminar(venta.id)" class="btn btn-danger" title="Eliminar">
                             <img src="../assets/delete.svg" alt="delete">
                         </button>
@@ -62,6 +70,7 @@
             </tbody>
         </table>
 
+        <!-- Total de la venta -->
         <h3 class="text-center">Total {{ total }}</h3>
     </div>
 </template>
@@ -86,6 +95,7 @@ export default {
         }
     },
     mounted() {
+        // Focus en el input de articulo
         this.$refs.articulo.focus();
     },
     created() {
@@ -93,6 +103,7 @@ export default {
     },
     methods: {
         traerDatos() {
+            // Traer los articulos y los datos de la venta
             this.obtenerDatos('articulos')
             .then(res => {
                 this.articulos = res
@@ -104,6 +115,7 @@ export default {
             })
         },
         sumaPrecio() {
+            // Calcular el total de la venta
             let t = 0
             for (let i = 0; i < this.ventas.length; i++) {
                 t += parseFloat(this.ventas[i].precio)
@@ -111,6 +123,7 @@ export default {
             this.total = t.toFixed(2)
         },
         precio() {
+            // Obtener el precio del articulo
             for (let i = 0; i < this.articulos.length; i++) {
                 if (this.articulos[i].id == this.datos.articulo_id) {
                     this.p = this.articulos[i].precio
@@ -118,6 +131,7 @@ export default {
             }
         },
         eliminar(id) {
+            // Verificar antes de eliminar un articulo
             this.$fire({
                 title: "Estas seguro?",
                 text: "No podras volver atras",
@@ -140,6 +154,7 @@ export default {
             });
         },
         ingresarArticulo() {
+            // Se calcula el precio total de la venta y despues se ingresa
             this.precio();
             let pre = this.datos.cantidad*this.p;
             this.datos.precio = pre.toFixed(2);
@@ -156,12 +171,14 @@ export default {
                         type: "success",
                         timer: 1000
                     });
+                // Se muestra el mensaje de error
                 }else {
                     this.error = res
                 }
             })
         },
         crearComprobante() {
+            // Se verifica si no hay articulos en la venta
             if (this.ventas.length == 0) {
                 this.$fire({
                     title: "No hay articulos!",
@@ -169,6 +186,7 @@ export default {
                     type: 'error',
                     timer: 1000
                 });
+            // Se genera el comprobante de la venta con todos los detalles y se vuelve al componente principal
             }else {
                 this.obtenerDatos('venta')
                 .then(res => {
@@ -181,6 +199,7 @@ export default {
                             timer: 2000
                         });
                         this.$emit('salirAbmVenta', true)
+                    // Si algo sale mal se muestra este mensaje
                     }else {
                         this.$fire({
                             title: "No se pudo completar la operacion!",
@@ -193,6 +212,7 @@ export default {
             }
         },
         salir() {
+            // Volver al componente principal
             this.$emit('salirAbmVenta')
         }
     }
