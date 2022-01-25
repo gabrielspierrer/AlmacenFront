@@ -1,4 +1,4 @@
-# projectvue2
+# Proyecto Almacen
 
 ## Project setup
 ```
