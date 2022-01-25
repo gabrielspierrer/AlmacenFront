@@ -90,7 +90,6 @@ export default {
             error: {},
             articulos: [],
             compras: [],
-            p: 0,
             total: 0,
         }
     },
@@ -122,14 +121,6 @@ export default {
             }
             this.total = t.toFixed(2)
         },
-        precio() {
-            // Se busca el precio del articulo seleccionado
-            for (let i = 0; i < this.articulos.length; i++) {
-                if (this.articulos[i].id == this.datos.articulo_id) {
-                    this.p = this.articulos[i].precio
-                }
-            }
-        },
         eliminar(id) {
             // Mostrar mensaje de verificacion para eliminar un articulo
             this.$fire({
@@ -154,10 +145,7 @@ export default {
             });
         },
         ingresarArticulo() {
-            // Se calcula el precio total antes de ingresar los datos de la compra
-            this.precio();
-            let pre = this.datos.cantidad*this.p;
-            this.datos.precio = pre.toFixed(2);
+            // Ingresar los datos de la compra en la base de datos
             this.ingresarDatos('compras', this.datos)
             .then(res => {
                 if(res.validar == true) {

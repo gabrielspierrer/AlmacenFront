@@ -45,14 +45,25 @@
                     </div>
                 </div>
 
-                <!-- Precio -->
+                <!-- Precio costo -->
                 <div class="form-floating">
-                    <input @keyup.enter="aceptar()" v-model="datos.precio" type="text" class="form-control" id="floatingPrecio" placeholder="Precio">
+                    <input v-model="datos.precio_costo" type="text" class="form-control" id="floatingPrecioCosto" placeholder="Precio costo">
 
-                    <label for="floatingPrecio">Precio</label>
+                    <label for="floatingPrecioCosto">Precio costo</label>
 
-                    <div v-if="error && error.precio" class="alert alert-danger">
-                        {{ error.precio[0] }}
+                    <div v-if="error && error.precio_costo" class="alert alert-danger">
+                        {{ error.precio_costo[0] }}
+                    </div>
+                </div>
+
+                <!-- Precio venta -->
+                <div class="form-floating">
+                    <input @keyup.enter="aceptar()" v-model="datos.precio_venta" type="text" class="form-control" id="floatingPrecioVenta" placeholder="Precio venta">
+
+                    <label for="floatingPrecioVenta">Precio venta</label>
+
+                    <div v-if="error && error.precio_venta" class="alert alert-danger">
+                        {{ error.precio_venta[0] }}
                     </div>
                 </div>
             </div>

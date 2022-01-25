@@ -90,7 +90,6 @@ export default {
             error: {},
             articulos: [],
             ventas: [],
-            p: 0,
             total: 0,
         }
     },
@@ -122,14 +121,6 @@ export default {
             }
             this.total = t.toFixed(2)
         },
-        precio() {
-            // Obtener el precio del articulo
-            for (let i = 0; i < this.articulos.length; i++) {
-                if (this.articulos[i].id == this.datos.articulo_id) {
-                    this.p = this.articulos[i].precio
-                }
-            }
-        },
         eliminar(id) {
             // Verificar antes de eliminar un articulo
             this.$fire({
@@ -154,10 +145,7 @@ export default {
             });
         },
         ingresarArticulo() {
-            // Se calcula el precio total de la venta y despues se ingresa
-            this.precio();
-            let pre = this.datos.cantidad*this.p;
-            this.datos.precio = pre.toFixed(2);
+            // Ingresar los datos de la venta en la base de datos
             this.ingresarDatos('ventas', this.datos)
             .then(res => {
                 if(res.validar == true) {

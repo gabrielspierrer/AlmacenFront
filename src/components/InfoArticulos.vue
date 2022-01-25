@@ -31,7 +31,8 @@
                         <th scope="col">Nombre</th>
                         <th scope="col">Rubro</th>
                         <th scope="col">Stock</th>
-                        <th scope="col">Precio</th>
+                        <th scope="col">Precio/C</th>
+                        <th scope="col">Precio/V</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
@@ -41,7 +42,8 @@
                         <td>{{ articulo.nombre }}</td>
                         <td>{{ articulo.rubro.nombre }}</td>
                         <td>{{ articulo.stock }}</td>
-                        <td>{{ articulo.precio }}</td>
+                        <td>{{ articulo.precio_costo }}</td>
+                        <td>{{ articulo.precio_venta }}</td>
                         <td>
                             <!-- Botones editar y eliminar -->
                             <div class="d-flex flex-row justify-content-center align-items-center gap-2">
