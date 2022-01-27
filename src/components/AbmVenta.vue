@@ -51,7 +51,8 @@
                 <tr>
                     <th scope="col">Articulo</th>
                     <th scope="col">Cantidad</th>
-                    <th scope="col">Precio</th>
+                    <th scope="col">Precio/U</th>
+                    <th scope="col">Importe</th>
                     <th></th>
                 </tr>
             </thead>
@@ -59,7 +60,8 @@
                 <tr v-for="(venta, index) in ventas" :key="index">
                     <td>{{ venta.articulo.nombre }}</td>
                     <td>{{ venta.cantidad }}</td>
-                    <td>{{ venta.precio }}</td>
+                    <td>{{ venta.precio_unitario }}</td>
+                    <td>{{ venta.importe }}</td>
                     <td>
                         <!-- Boton para eliminar un articulo -->
                         <button @click="eliminar(venta.id)" class="btn btn-danger" title="Eliminar">
@@ -117,7 +119,7 @@ export default {
             // Calcular el total de la venta
             let t = 0
             for (let i = 0; i < this.ventas.length; i++) {
-                t += parseFloat(this.ventas[i].precio)
+                t += parseFloat(this.ventas[i].importe)
             }
             this.total = t.toFixed(2)
         },
@@ -178,10 +180,10 @@ export default {
             }else {
                 this.obtenerDatos('venta')
                 .then(res => {
-                    if (res.respuesta == true) {
+                    if (res == true) {
                         this.$fire({
                             title: "Comprobante creado!",
-                            text: "Total "+res.total,
+                            text: "Total "+this.total,
                             showConfirmButton: false,
                             type: 'success',
                             timer: 2000

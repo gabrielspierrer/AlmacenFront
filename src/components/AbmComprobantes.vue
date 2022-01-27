@@ -44,14 +44,16 @@
                     <tr>
                         <th scope="col">Articulo</th>
                         <th scope="col">Cantidad</th>
-                        <th scope="col">Precio</th>
+                        <th scope="col">Precio/U</th>
+                        <th scope="col">Importe</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(detalle, index) in datos.comprobantedetalles" :key="index">
                         <td>{{ detalle.articulo.nombre }}</td>
                         <td>{{ detalle.cantidad }}</td>
-                        <td>{{ detalle.precio }}</td>
+                        <td>{{ detalle.precio_unitario }}</td>
+                        <td>{{ detalle.importe }}</td>
                     </tr>
                 </tbody>
             </table>
